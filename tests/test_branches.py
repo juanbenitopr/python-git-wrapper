@@ -11,7 +11,7 @@ pytest.mark.usefixtures(repository_with_file)
 def test_get_current_branch(repository_with_file: Tuple[Repository, str]):
     repository, file = repository_with_file
 
-    repository.execute(*'checkout -b test_branch'.split(' '))
+    repository.execute('checkout -b test_branch')
     repository.add(all_files=True)
     repository.commit('message')
 

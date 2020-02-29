@@ -2,4 +2,5 @@
 dist/
 build/
 .idea/
+__pycache__
 .pypirc

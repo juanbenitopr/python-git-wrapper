@@ -22,7 +22,7 @@ class Repository:
         return branch
 
     @property
-    def local_branches(self) -> [str]:
+    def local_branches(self) -> List[str]:
         branch = self.execute('branch')
 
         branch = [b.strip() for b in branch.replace('* ', '').splitlines()]
@@ -31,6 +31,14 @@ class Repository:
             raise RepositoryEmpty()
 
         return branch
+
+    @property
+    def remote(self) -> List[str]:
+        remotes = self.execute('remote')
+
+        remote_cleaned = [remote for remote in remotes.splitlines()]
+
+        return remote_cleaned
 
     @classmethod
     def _create(cls, path: str):
@@ -54,7 +62,7 @@ class Repository:
         return cls(path=path)
 
     def execute(self, command: str, *args) -> str:
-        response = run_git_command(*self._global_args, command, *args)
+        response = run_git_command(*self._global_args, *command.split(' '), *args)
         return response.stdout.decode('utf8')
 
     def status(self):
@@ -90,12 +98,50 @@ class Repository:
 
     def add(self, files: List[str] = list(), all_files: bool = False):
         if all_files:
-            self.execute('add', '-A')
+            self.execute('add -A')
         elif len(files) > 0:
             for file in files:
                 self.execute('add', file)
         return self.status()
 
     def commit(self, message: str):
-        self.execute('commit', '-m', message)
+        self.execute('commit -m', message)
         return self.status()
+
+    def add_remote(self, url: str, name: str='origin'):
+        self.execute(f'remote add {name} {url}')
+        return self.status()
+
+    def remove_remote(self, name: str='origin'):
+        self.execute(f'remote remove {name}')
+        return self.status()
+
+    def push(self, remote_name: str='origin', force: bool=False, remote_branch: str=None, local_branch: str=None):
+
+        local_branch = local_branch or self.current_branch
+
+        command = f'push {remote_name} {local_branch}'
+
+        if remote_branch:
+            command += f':{remote_branch}'
+
+        if force:
+            command += ' -f'
+
+        self.execute(command)
+        return self.status()
+
+    def pull(self, remote_name: str='origin', force: bool=False, remote_branch: str=None, local_branch: str=None):
+        local_branch = local_branch or self.current_branch
+
+        command = f'pull {remote_name} {local_branch}'
+
+        if remote_branch:
+            command += f':{remote_branch}'
+
+        if force:
+            command += ' -f'
+
+        self.execute(command)
+        return self.status()
+
