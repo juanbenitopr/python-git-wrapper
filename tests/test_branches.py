@@ -2,10 +2,11 @@ from typing import Tuple
 
 import pytest
 
-from repository import Repository
+from gyt.repository import Repository
 from tests.test_operation_repo import repository_with_file
 
 pytest.mark.usefixtures(repository_with_file)
+
 
 def test_get_current_branch(repository_with_file: Tuple[Repository, str]):
     repository, file = repository_with_file

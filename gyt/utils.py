@@ -1,6 +1,6 @@
 import subprocess
 
-from exceptions import RepositoryException
+from gyt.exceptions import RepositoryException
 
 
 def run_git_command(*args) -> subprocess.CompletedProcess:

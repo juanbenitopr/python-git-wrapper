@@ -4,7 +4,7 @@ from typing import Tuple
 
 import pytest
 
-from repository import Repository
+from gyt.repository import Repository
 
 
 @pytest.fixture

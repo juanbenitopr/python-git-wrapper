@@ -2,8 +2,8 @@ import os
 
 import pytest
 
-from exceptions import RepositoryNotFoundError
-from repository import Repository
+from gyt.exceptions import RepositoryNotFoundError
+from gyt.repository import Repository
 
 
 class TestInitRepo:

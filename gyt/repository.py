@@ -1,7 +1,7 @@
 import os
 from typing import List, Union, Tuple
-from exceptions import RepositoryNotFoundError, RepositoryEmpty
-from utils import run_git_command
+from gyt.exceptions import RepositoryNotFoundError, RepositoryEmpty
+from gyt.utils import run_git_command
 
 
 class Repository:

@@ -1,0 +1,5 @@
+.pytest_cache/
+dist/
+build/
+.idea/
+.pypirc
