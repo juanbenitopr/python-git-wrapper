@@ -1,7 +1,7 @@
 import pytest
 
 from gyt import Repository
-from tests.test_operation_repo import empty_repository
+from tests.fixtures.repository import empty_repository
 
 pytest.mark.usefixtures(empty_repository)
 

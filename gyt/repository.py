@@ -1,5 +1,9 @@
 import os
 from typing import List, Union, Tuple
+
+import datetime
+
+from gyt.commit import Commit
 from gyt.exceptions import RepositoryNotFoundError, RepositoryEmpty
 from gyt.utils import run_git_command
 
@@ -39,6 +43,16 @@ class Repository:
         remote_cleaned = [remote for remote in remotes.splitlines()]
 
         return remote_cleaned
+
+    @property
+    def last_commit(self) -> Commit:
+        last_log = self.execute('log --pretty=format:"%H_%an_%ad_%s" -1 --date=iso').replace('"', '')
+        chash, cauthor, cdate_time, cmessage = last_log.split('_')
+
+        cdate_time = datetime.datetime.strptime(cdate_time, '%Y-%m-%d %H:%M:%S %z')
+
+        return Commit(hash=chash, author=cauthor, date_time=cdate_time, message=cmessage)
+
 
     @classmethod
     def _create(cls, path: str):
@@ -90,13 +104,15 @@ class Repository:
             return 'branch', line.replace('On branch ', '')
         elif 'new file' in line:
             return 'new', line.replace('\tnew file:', '').strip()
-        elif'modified' in line:
+        elif 'modified' in line:
             return 'modified', line.replace('\tmodified:', '').strip()
+        elif 'renamed' in line:
+            return 'modified', line.replace('\trenamed:', '').strip()
         elif line.startswith('\t'):
             return 'untracked', line.strip()
         return None
 
-    def add(self, files: List[str] = list(), all_files: bool = False):
+    def add_files(self, files: List[str] = list(), all_files: bool = False):
         if all_files:
             self.execute('add -A')
         elif len(files) > 0:
@@ -145,3 +161,10 @@ class Repository:
         self.execute(command)
         return self.status()
 
+    def revert_last_commit(self) -> Commit:
+        self.execute('revert --no-edit HEAD')
+        return self.last_commit
+
+    def change_last_commit_message(self, message: str) -> Commit:
+        self.execute(f'commit --amend -m', message)
+        return self.last_commit
