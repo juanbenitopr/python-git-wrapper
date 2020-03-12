@@ -101,3 +101,15 @@ def test_merge_branches_with_new_commit(repository_with_commits: Repository):
     assert branch_merged == origin_branch
 
     assert isinstance(repository_with_commits.get_commit_by_position(2), Commit)
+
+
+def test_get_branch_with_commit(repository_with_commits: Repository):
+    branch_name = 'test_branch2'
+
+    repository_with_commits.create_branch(branch_name, move_to=True)
+    random_commit = create_random_commit(repository_with_commits)
+
+    branches = repository_with_commits.branches_by_commit(random_commit)
+
+    assert len(branches) == 1
+    assert branches[0] == 'test_branch2'

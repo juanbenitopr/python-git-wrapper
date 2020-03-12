@@ -213,26 +213,9 @@ class Repository:
 
         return Branch(branch_origin)
 
-    def merge_branches(self, branch_origin: Branch, branch: Branch, squash=False, new_commit=False) -> Branch:
-        self.checkout(branch_origin)
-
-        command = f'merge --ff-only'
-
-        if squash:
-            command += ' --squash'
-
-        if not new_commit:
-            command += ' --no-commit'
-
-        command += f' {str(branch)}'
-
-        self.execute(command)
-
-        return Branch(branch_origin)
-
     def branches_by_commit(self, commit: Commit) -> List[Branch]:
-        branches = self.execute('git branch --contains b6725c1c72bd09361531af14926e47a684a04815')
+        branches = self.execute(f'branch --contains {commit}')
 
-        branches_cleaned = [Branch(b.strip()) for branch in branches.replace('* ', '').splitlines()]
+        branches_cleaned = [Branch(branch.strip()) for branch in branches.replace('* ', '').splitlines()]
 
         return branches_cleaned
