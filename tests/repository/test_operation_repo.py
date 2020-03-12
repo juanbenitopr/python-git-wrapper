@@ -6,9 +6,7 @@ from gyt.commit import Commit
 from gyt.repository import Repository
 from tests.fixtures.repository import repository_with_file, empty_repository, repository_with_commits
 
-pytest.mark.usefixtures(repository_with_file)
-pytest.mark.usefixtures(empty_repository)
-pytest.mark.usefixtures(repository_with_commits)
+pytest.mark.usefixtures(repository_with_file, empty_repository, repository_with_commits)
 
 
 def test_empty_repository_status(empty_repository: Repository):

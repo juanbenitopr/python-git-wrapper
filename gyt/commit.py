@@ -17,6 +17,9 @@ class Commit:
     def hash(self, value):
         raise Exception('There is no possible set a new hash value, instance a new commit instead')
 
+    def __str__(self):
+        return self._hash
+
     def __hash__(self) -> str:
         return self._hash
 
