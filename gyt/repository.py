@@ -6,10 +6,12 @@ import datetime
 from gyt.branch import Branch
 from gyt.commit import Commit
 from gyt.exceptions import RepositoryNotFoundError, RepositoryEmpty
-from gyt.utils import run_git_command
+from gyt.git_service import GitService
 
 
 class Repository:
+
+    service = GitService.get_instance()
 
     def __init__(self, path: str):
         self.path = path
@@ -59,7 +61,7 @@ class Repository:
 
     @classmethod
     def _create(cls, path: str):
-        run_git_command('init', path)
+        cls.service.run_git_command('init', path)
 
     @classmethod
     def build(cls, path: str = '.', create_repository: bool = False, create_project: bool = False):
@@ -79,7 +81,7 @@ class Repository:
         return cls(path=path)
 
     def execute(self, command: str, *args) -> str:
-        response = run_git_command(*self._global_args, *command.split(' '), *args)
+        response = self.service.run_git_command(*self._global_args, *command.split(' '), *args)
         return response.stdout.decode('utf8')
 
     def status(self):
