@@ -7,20 +7,20 @@ from gyt.git_service import GitService
 
 
 def test_create_git_service():
-    service = GitService.start('/usr/local/bin/git')
+    service = GitService.singleton('/usr/local/bin/git')
     assert isinstance(service, GitService)
 
-    service = GitService.get_instance()
+    service = GitService.instance()
     assert isinstance(service, GitService)
 
 
 def test_create_git_service_using_wrong_path():
     with pytest.raises(GitError):
-        GitService.start('/usr/test')
+        GitService.singleton('/usr/test')
 
 
 def test_run_git_command():
-    GitService.start('/usr/local/bin/git')
+    GitService.singleton('/usr/local/bin/git')
 
     response = GitService.run_git_command('--version')
 
@@ -31,7 +31,7 @@ def test_run_git_command():
 
 
 def test_run_git_command_using_wrong_command():
-    GitService.start('/usr/local/bin/git')
+    GitService.singleton('/usr/local/bin/git')
 
     with pytest.raises(GitError):
         GitService.run_git_command('--v')

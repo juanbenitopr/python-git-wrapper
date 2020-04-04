@@ -11,7 +11,7 @@ from gyt.git_service import GitService
 
 class Repository:
 
-    service = GitService.get_instance()
+    service = GitService.instance()
 
     def __init__(self, path: str):
         self.path = path
