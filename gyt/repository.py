@@ -7,6 +7,7 @@ from gyt.branch import Branch
 from gyt.commit import Commit
 from gyt.exceptions import RepositoryNotFoundError, RepositoryEmpty
 from gyt.git_service import GitService
+from gyt.status import Status
 
 
 class Repository:
@@ -84,38 +85,12 @@ class Repository:
         response = self.service.run_git_command(*self._global_args, *command.split(' '), *args)
         return response.stdout.decode('utf8')
 
-    def status(self):
-        response = self.execute('status')
+    def status(self) -> Status:
+        response = self.execute('status -b --porcelain=1')
 
-        sections = {'branch': None, 'new': [], 'modified': [], 'untracked': []}
+        status = Status.from_porcelain_format(response)
 
-        for section in response.splitlines():
-            section_cleaned = self._clean_status_line(section)
-
-            if section_cleaned is None:
-                continue
-
-            section_cleaned, line_cleaned = section_cleaned
-
-            if isinstance(sections[section_cleaned], list):
-                sections[section_cleaned].append(line_cleaned)
-            else:
-                sections[section_cleaned] = line_cleaned
-
-        return sections
-
-    def _clean_status_line(self, line: str) -> Union[Tuple[str, str], None]:
-        if line.startswith('On branch'):
-            return 'branch', line.replace('On branch ', '')
-        elif 'new file' in line:
-            return 'new', line.replace('\tnew file:', '').strip()
-        elif 'modified' in line:
-            return 'modified', line.replace('\tmodified:', '').strip()
-        elif 'renamed' in line:
-            return 'modified', line.replace('\trenamed:', '').strip()
-        elif line.startswith('\t'):
-            return 'untracked', line.strip()
-        return None
+        return status
 
     def add_files(self, files: List[str] = list(), all_files: bool = False):
         if all_files:

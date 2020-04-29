@@ -12,10 +12,10 @@ pytest.mark.usefixtures(repository_with_file, empty_repository, repository_with_
 def test_empty_repository_status(empty_repository: Repository):
     status = empty_repository.status()
 
-    assert status['branch'] == 'master'
-    assert status['new'] == []
-    assert status['modified'] == []
-    assert status['untracked'] == []
+    assert status.branch is None
+    assert status.added == []
+    assert status.modified == []
+    assert status.untracked == []
 
 
 def test_repository_status_with_changes(repository_with_file: Tuple[Repository, str]):
@@ -23,10 +23,10 @@ def test_repository_status_with_changes(repository_with_file: Tuple[Repository, 
 
     status = repository.status()
 
-    assert status['branch'] == 'master'
-    assert status['new'] == []
-    assert status['modified'] == []
-    assert status['untracked'] == [file]
+    assert status.branch is None
+    assert status.added == []
+    assert status.modified == []
+    assert status.untracked == [file]
 
 
 def test_add_file(repository_with_file: Tuple[Repository, str]):
@@ -34,13 +34,13 @@ def test_add_file(repository_with_file: Tuple[Repository, str]):
 
     status = repository.status()
 
-    assert status['new'] == []
-    assert status['untracked'] == [file]
+    assert status.added == []
+    assert status.untracked == [file]
 
     status = repository.add_files(files=[file])
 
-    assert status['new'] == [file]
-    assert status['untracked'] == []
+    assert status.added == [file]
+    assert status.untracked == []
 
 
 def test_add_all_files(repository_with_file: Tuple[Repository, str]):
@@ -48,13 +48,13 @@ def test_add_all_files(repository_with_file: Tuple[Repository, str]):
 
     status = repository.status()
 
-    assert status['new'] == []
-    assert status['untracked'] == [file]
+    assert status.added == []
+    assert status.untracked == [file]
 
     status = repository.add_files(all_files=True)
 
-    assert status['new'] == [file]
-    assert status['untracked'] == []
+    assert status.added == [file]
+    assert status.untracked == []
 
 
 def test_commit_changes(repository_with_file: Tuple[Repository, str]):
@@ -62,12 +62,12 @@ def test_commit_changes(repository_with_file: Tuple[Repository, str]):
 
     status = repository.add_files(all_files=True)
 
-    assert status['new'] == [file]
+    assert status['added'] == [file]
     assert status['untracked'] == []
 
     status = repository.commit('message')
 
-    assert status['new'] == []
+    assert status['added'] == []
     assert status['untracked'] == []
 
 

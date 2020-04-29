@@ -50,12 +50,12 @@ def test_create_branch(repository_with_commits: Repository):
     branch1 = repository_with_commits.create_branch(branch_name1)
 
     assert branch1 == branch_name1
-    assert branch1 != repository_with_commits.status().get('branch')
+    assert branch1 != repository_with_commits.status().branch
 
     branch2 = repository_with_commits.create_branch(branch_name2, move_to=True)
 
     assert branch2 == branch_name2
-    assert branch2 == repository_with_commits.status().get('branch')
+    assert branch2 == repository_with_commits.status().branch
 
 
 def test_merge_branches(repository_with_commits: Repository):

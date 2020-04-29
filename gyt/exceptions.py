@@ -12,3 +12,6 @@ class RepositoryNotFoundError(RepositoryException):
 
 class RepositoryEmpty(RepositoryException):
     message = 'Repository does not have any commits yet'
+
+class StatusError(GitError):
+    message = 'Error serializing the status'
