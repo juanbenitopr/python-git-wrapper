@@ -4,3 +4,6 @@ build/
 .idea/
 __pycache__
 .pypirc
+.package.lock
+.tox/
+gyt.egg-info/
