@@ -60,12 +60,7 @@ def test_add_all_files(repository_with_file: Tuple[Repository, str]):
 def test_commit_changes(repository_with_file: Tuple[Repository, str]):
     repository, file = repository_with_file
 
-    status = repository.add_files(all_files=True)
-
-    assert status['added'] == [file]
-    assert status['untracked'] == []
-
-    status = repository.commit('message')
+    status = repository.commit('message', add_files=True)
 
     assert status['added'] == []
     assert status['untracked'] == []

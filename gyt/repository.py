@@ -30,7 +30,7 @@ class Repository:
         return Branch(branch)
 
     @property
-    def local_branches(self) -> List[Branch]:
+    def branches(self) -> List[Branch]:
         branch = self.execute('branch')
 
         branch = [Branch(b.strip()) for b in branch.replace('* ', '').splitlines()]
@@ -100,7 +100,10 @@ class Repository:
                 self.execute('add', file)
         return self.status()
 
-    def commit(self, message: str):
+    def commit(self, message: str, add_files: bool = False):
+        if add_files:
+            self.add_files(all_files=True)
+
         self.execute('commit -m', message)
         return self.status()
 

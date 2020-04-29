@@ -38,7 +38,7 @@ def test_get_branches(repository_with_file: Tuple[Repository, str]):
     repository.add_files(all_files=True)
     repository.commit('message')
 
-    branches = repository.local_branches
+    branches = repository.branches
 
     assert branches == ['master', 'test_branch']
 
