@@ -1,4 +1,3 @@
-import copy
 import json
 
 from collections import defaultdict
@@ -42,7 +41,7 @@ class Status:
                 git_symbol_name = cls.symbol_names[git_symbol[0]]
                 status[git_symbol_name].append(file)
         except Exception as e:
-            raise StatusError
+            print('Error getting the repository status')
 
         return cls(branch, **status)
 
