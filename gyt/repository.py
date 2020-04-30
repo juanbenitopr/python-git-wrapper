@@ -12,7 +12,7 @@ from gyt.status import Status
 
 class Repository:
 
-    service = GitService.instance()
+    _service = GitService.instance()
 
     def __init__(self, path: str):
         self.path = path
@@ -62,7 +62,7 @@ class Repository:
 
     @classmethod
     def _create(cls, path: str):
-        cls.service.run_git_command('init', path)
+        cls._service.run_git_command('init', path)
 
     @classmethod
     def build(cls, path: str = '.', create_repository: bool = False, create_project: bool = False):
@@ -82,7 +82,7 @@ class Repository:
         return cls(path=path)
 
     def execute(self, command: str, *args) -> str:
-        response = self.service.run_git_command(*self._global_args, *command.split(' '), *args)
+        response = self._service.run_git_command(*self._global_args, *command.split(' '), *args)
         return response.stdout.decode('utf8')
 
     def status(self) -> Status:
@@ -100,14 +100,14 @@ class Repository:
                 self.execute('add', file)
         return self.status()
 
-    def commit(self, message: str, add_files: bool = False):
+    def commit(self, message: str, add_files: bool = False) -> Status:
         if add_files:
             self.add_files(all_files=True)
 
         self.execute('commit -m', message)
         return self.status()
 
-    def add_remote(self, url: str, name: str = 'origin'):
+    def add_remote(self, url: str, name: str = 'origin') -> Status:
         self.execute(f'remote add {name} {url}')
         return self.status()
 
@@ -165,7 +165,7 @@ class Repository:
         cdate_time = datetime.datetime.strptime(cdate_time, '%Y-%m-%d %H:%M:%S %z')
         return Commit(hash=chash, author=cauthor, date_time=cdate_time, message=cmessage)
 
-    def checkout(self, destination: str):
+    def checkout(self, destination: str) -> Status:
         self.execute(f'checkout {destination}')
         return self.status()
 
@@ -193,7 +193,7 @@ class Repository:
 
         return Branch(branch_origin)
 
-    def branches_by_commit(self, commit: Commit) -> List[Branch]:
+    def get_branches_by_commit(self, commit: Commit) -> List[Branch]:
         branches = self.execute(f'branch --contains {commit}')
 
         branches_cleaned = [Branch(branch.strip()) for branch in branches.replace('* ', '').splitlines()]
