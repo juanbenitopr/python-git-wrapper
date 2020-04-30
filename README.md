@@ -49,7 +49,7 @@ repository.push()
 The library is divided in 3 main components.
 
 - **Git Service**: Object which contains all the data to communicate with the git process properly.
-    - NOTE: If you don't have configured the path of the git binary in your path. Execute the next command: ``
+    - NOTE: If you don't have configured the path of the git binary in your path. Execute the next command: `GitService.singleton('git path'')`
 
 - **Repository**: It will be your entry point, which you will interact to provide an retrieve all the information. It is a reference to the repository you want to work on.
 
