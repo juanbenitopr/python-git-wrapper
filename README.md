@@ -6,7 +6,7 @@ GYT is a python library designed to interact with your git repository in the sim
 
 ### Installation.
 
-Requirements: python3.7, python3.8
+Requirements: python3.7, python3.8. You need Git installed, you can install it from [here](https://git-scm.com/).
 
 `pip install gyt`
 
