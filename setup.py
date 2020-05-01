@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="gyt",
-    version="0.1.0",
+    version="0.9.0",
     author="Juan Benito Pacheco Rubio",
     author_email="juanbenito.pr@gmail.com",
     description="Simple git wrapper for python",
@@ -14,7 +14,14 @@ setuptools.setup(
     url="https://github.com/juanbenitopr/git-wrapper",
     packages=setuptools.find_packages(),
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Topic :: Software Development :: Version Control :: Git",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Topic :: Software Development :: Libraries",
+        "Topic :: Utilities"
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.7',
 )

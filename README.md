@@ -4,11 +4,6 @@ The Simple Python Git Wrapper
 
 GYT is a python library designed to interact with your git repository in the simplest way.
 
-### Installation.
-
-Requirements: python3.7, python3.8. You need Git installed, you can install it from [here](https://git-scm.com/).
-
-`pip install gyt`
 
 ### Getting Started
 
