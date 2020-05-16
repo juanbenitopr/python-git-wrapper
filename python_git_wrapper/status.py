@@ -3,7 +3,7 @@ import json
 from collections import defaultdict
 from typing import Optional
 
-from gyt.branch import Branch
+from python_git_wrapper.branch import Branch
 
 
 class Status:

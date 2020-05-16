@@ -5,13 +5,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="python-git-wrapper",
-    version="0.9.0.post1",
+    version="0.9.0.post2",
     author="Juan Benito Pacheco Rubio",
     author_email="juanbenito.pr@gmail.com",
     description="Simple git wrapper for python",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/juanbenitopr/git-wrapper",
+    url="https://github.com/juanbenitopr/python-git-wrapper",
     packages=setuptools.find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",

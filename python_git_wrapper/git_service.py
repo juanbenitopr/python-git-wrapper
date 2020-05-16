@@ -1,6 +1,6 @@
 import subprocess
 
-from gyt import GitError
+from python_git_wrapper import GitError
 
 
 class GitService:

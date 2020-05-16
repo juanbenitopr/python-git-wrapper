@@ -4,8 +4,8 @@ from random import randint
 
 import pytest
 
-from gyt import Repository
-from gyt.commit import Commit
+from python_git_wrapper import Repository
+from python_git_wrapper.commit import Commit
 
 
 @pytest.fixture

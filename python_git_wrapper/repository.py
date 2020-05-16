@@ -3,11 +3,11 @@ from typing import List
 
 import datetime
 
-from gyt.branch import Branch
-from gyt.commit import Commit
-from gyt.exceptions import RepositoryNotFoundError, RepositoryEmpty
-from gyt.git_service import GitService
-from gyt.status import Status
+from python_git_wrapper.branch import Branch
+from python_git_wrapper.commit import Commit
+from python_git_wrapper.exceptions import RepositoryNotFoundError, RepositoryEmpty
+from python_git_wrapper.git_service import GitService
+from python_git_wrapper.status import Status
 
 
 class Repository:

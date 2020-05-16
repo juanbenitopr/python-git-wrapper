@@ -2,8 +2,8 @@ from subprocess import CompletedProcess
 
 import pytest
 
-from gyt import GitError
-from gyt.git_service import GitService
+from python_git_wrapper import GitError
+from python_git_wrapper.git_service import GitService
 
 
 def test_create_git_service():

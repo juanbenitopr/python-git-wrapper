@@ -2,10 +2,10 @@ from typing import Tuple
 
 import pytest
 
-from gyt import GitError
-from gyt.branch import Branch
-from gyt.commit import Commit
-from gyt.repository import Repository
+from python_git_wrapper import GitError
+from python_git_wrapper.branch import Branch
+from python_git_wrapper.commit import Commit
+from python_git_wrapper.repository import Repository
 from tests.fixtures.repository import repository_with_file, repository_with_commits, create_random_commit
 
 pytest.mark.usefixtures(repository_with_file, repository_with_commits)

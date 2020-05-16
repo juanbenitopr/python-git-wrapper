@@ -1,6 +1,6 @@
 import pytest
 
-from gyt import Repository
+from python_git_wrapper import Repository
 from tests.fixtures.repository import empty_repository
 
 pytest.mark.usefixtures(empty_repository)

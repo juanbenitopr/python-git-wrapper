@@ -2,8 +2,8 @@ from typing import Tuple
 
 import pytest
 
-from gyt.commit import Commit
-from gyt.repository import Repository
+from python_git_wrapper.commit import Commit
+from python_git_wrapper.repository import Repository
 from tests.fixtures.repository import repository_with_file, empty_repository, repository_with_commits
 
 pytest.mark.usefixtures(repository_with_file, empty_repository, repository_with_commits)

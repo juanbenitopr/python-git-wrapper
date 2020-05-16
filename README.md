@@ -13,7 +13,7 @@ This library has been tested python >= 3.7, 3.8 and you need to have installed G
 The library is pretty simple, you only need to indicate where your repository is or create a new one.
 
 ```
-from gyt import Repository
+from python_git_wrapper import Repository
 
 repository = Repository('.') # Path of your git repository. It could be relative to your project or absolute
 ```
