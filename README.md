@@ -1,9 +1,12 @@
-# GYT
+# Git Wrapper
 
 The Simple Python Git Wrapper
 
-GYT is a python library designed to interact with your git repository in the simplest way.
+This library is a simple git wrapper which let you perform many operations on any git repository in a powerful and simple way.
 
+### Requirements
+
+This library has been tested python >= 3.7, 3.8 and you need to have installed Git > 2.22.0
 
 ### Getting Started
 

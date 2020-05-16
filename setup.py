@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="gyt",
-    version="0.9.0",
+    name="python-git-wrapper",
+    version="0.9.0.post1",
     author="Juan Benito Pacheco Rubio",
     author_email="juanbenito.pr@gmail.com",
     description="Simple git wrapper for python",
