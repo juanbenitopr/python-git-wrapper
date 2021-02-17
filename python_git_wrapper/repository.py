@@ -1,5 +1,6 @@
 import os
-from typing import List
+import re
+from typing import List, Tuple
 
 import datetime
 
@@ -8,6 +9,15 @@ from python_git_wrapper.commit import Commit
 from python_git_wrapper.exceptions import RepositoryNotFoundError, RepositoryEmpty
 from python_git_wrapper.git_service import GitService
 from python_git_wrapper.status import Status
+
+DELIMITER = '¡|&'
+
+
+def join_flags(flags: List[Tuple[bool, str]]):
+    return "".join([flag for (flagged, flag) in flags if flagged])
+
+
+get_hash = lambda commits: set(commit.hash for commit in commits)
 
 
 class Repository:
@@ -33,7 +43,9 @@ class Repository:
     def branches(self) -> List[Branch]:
         branch = self.execute('branch')
 
-        branch = [Branch(b.strip()) for b in branch.replace('* ', '').splitlines()]
+        branch = [
+            Branch(b.strip()) for b in branch.replace('* ', '').splitlines()
+        ]
 
         if not branch:
             raise RepositoryEmpty()
@@ -50,22 +62,17 @@ class Repository:
 
     @property
     def last_commit(self) -> Commit:
-        delimeter = '¡|&'
-
-        last_log = self.execute(
-            f'log --pretty=format:"%H{delimeter}%an{delimeter}%ad{delimeter}%s" -1 --date=iso').replace('"', '')
-        chash, cauthor, cdate_time, cmessage = last_log.split(delimeter)
-
-        cdate_time = datetime.datetime.strptime(cdate_time, '%Y-%m-%d %H:%M:%S %z')
-
-        return Commit(hash=chash, author=cauthor, date_time=cdate_time, message=cmessage)
+        return self.get_commit("-v")
 
     @classmethod
     def _create(cls, path: str):
         cls._service.run_git_command('init', path)
 
     @classmethod
-    def build(cls, path: str = '.', create_repository: bool = False, create_project: bool = False):
+    def build(cls,
+              path: str = '.',
+              create_repository: bool = False,
+              create_project: bool = False):
         repository_path = os.path.join(path, '.git')
 
         force_create = create_repository or create_project
@@ -82,7 +89,8 @@ class Repository:
         return cls(path=path)
 
     def execute(self, command: str, *args) -> str:
-        response = self._service.run_git_command(*self._global_args, *command.split(' '), *args)
+        response = self._service.run_git_command(*self._global_args,
+                                                 *command.split(' '), *args)
         return response.stdout.decode('utf8')
 
     def status(self) -> Status:
@@ -115,33 +123,29 @@ class Repository:
         self.execute(f'remote remove {name}')
         return self.status()
 
-    def push(self, remote_name: str = 'origin', force: bool = False, remote_branch: str = None,
+    def push(self,
+             remote_name: str = 'origin',
+             force: bool = False,
+             remote_branch: str = None,
              local_branch: str = None):
 
         local_branch = local_branch or self.current_branch
 
-        command = f'push {remote_name} {local_branch}'
-
-        if remote_branch:
-            command += f':{remote_branch}'
-
-        if force:
-            command += ' -f'
+        flags = [(remote_branch, f':{remote_branch}'), (force, ' -f')]
+        command = f'push {remote_name} {local_branch}{join_flags(flags)}'
 
         self.execute(command)
         return self.status()
 
-    def pull(self, remote_name: str = 'origin', force: bool = False, remote_branch: str = None,
+    def pull(self,
+             remote_name: str = 'origin',
+             force: bool = False,
+             remote_branch: str = None,
              local_branch: str = None):
         local_branch = local_branch or self.current_branch
 
-        command = f'pull {remote_name} {local_branch}'
-
-        if remote_branch:
-            command += f':{remote_branch}'
-
-        if force:
-            command += ' -f'
+        flags = [(remote_branch, f':{remote_branch}'), (force, ' -f')]
+        command = f'pull {remote_name} {local_branch}{join_flags(flags)}'
 
         self.execute(command)
         return self.status()
@@ -154,16 +158,41 @@ class Repository:
         self.execute(f'commit --amend -m', message)
         return self.last_commit
 
-    def get_commit_by_position(self, position: int) -> Commit:
-        delimeter = '¡|&'
+    def get_commit(self, hash: str) -> Commit:
 
         last_log = self.execute(
-            f'show HEAD~{position} --pretty=format:"%H{delimeter}%an{delimeter}%ad{delimeter}%s" --date=iso -s').replace(
-            '"', '')
-        chash, cauthor, cdate_time, cmessage = last_log.split(delimeter)
+            f'show {hash} --pretty=format:"%H{DELIMITER}%an{DELIMITER}%ad{DELIMITER}%s" --date=iso -s'
+        ).replace('"', '')
+        chash, cauthor, cdate_time, cmessage = last_log.split(DELIMITER)
 
-        cdate_time = datetime.datetime.strptime(cdate_time, '%Y-%m-%d %H:%M:%S %z')
-        return Commit(hash=chash, author=cauthor, date_time=cdate_time, message=cmessage)
+        cdate_time = datetime.datetime.strptime(cdate_time,
+                                                '%Y-%m-%d %H:%M:%S %z')
+        return Commit(
+            hash=chash,
+            author=cauthor,
+            date_time=cdate_time,
+            message=cmessage,
+            repository=self)
+
+    def get_commit_by_position(self, position: int) -> Commit:
+        return self.get_commit(f'HEAD~{position}')
+
+    def get_commit_parents(self, hash: str) -> List[Commit]:
+        parents = self.execute(f'log --pretty=%P -n 1 {hash}').replace('"', '')
+        parents = re.split(r"\s+", parents)
+        parents = filter(lambda commit: commit, parents)
+        return [self.get_commit(parent) for parent in parents]
+
+    def get_commit_children(self, hash: str) -> List[Commit]:
+        children = self.execute(
+            f'log --reverse --pretty=%P --ancestry-path {hash}..').replace(
+                '"', '')
+        children = re.split(r"\s+", children)
+        children = filter(
+            lambda commit: commit and hash in
+            get_hash(self.get_commit_parents(commit)),
+            set(children))
+        return [self.get_commit(child) for child in children]
 
     def checkout(self, destination: str) -> Status:
         self.execute(f'checkout {destination}')
@@ -176,18 +205,17 @@ class Repository:
             self.checkout(name)
         return Branch(name)
 
-    def merge_branches(self, branch_origin: Branch, branch: Branch, squash=False, new_commit=False) -> Branch:
+    def merge_branches(self,
+                       branch_origin: Branch,
+                       branch: Branch,
+                       squash=False,
+                       fast_forward=True,
+                       new_commit=False) -> Branch:
         self.checkout(branch_origin)
 
-        command = f'merge --ff-only'
-
-        if squash:
-            command += ' --squash'
-
-        if not new_commit:
-            command += ' --no-commit'
-
-        command += f' {str(branch)}'
+        flags = [(fast_forward, " --ff-only"), (squash, " --squash"),
+                 (not new_commit, " --no-commit")]
+        command = f'merge{join_flags(flags)} {str(branch)}'
 
         self.execute(command)
 
@@ -196,6 +224,9 @@ class Repository:
     def get_branches_by_commit(self, commit: Commit) -> List[Branch]:
         branches = self.execute(f'branch --contains {commit}')
 
-        branches_cleaned = [Branch(branch.strip()) for branch in branches.replace('* ', '').splitlines()]
+        branches_cleaned = [
+            Branch(branch.strip())
+            for branch in branches.replace('* ', '').splitlines()
+        ]
 
         return branches_cleaned
