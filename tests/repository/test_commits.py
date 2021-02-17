@@ -37,7 +37,5 @@ def test_merge_commit_ancestors(repository_with_commits: Repository):
     branch_merged = repository_with_commits.merge_branches(
         origin_branch, branch2, new_commit=True, fast_forward=False)
 
-    print(repository_with_commits.execute("l"))
-
     assert {random_commit_list[-1], random_commit_list2[-1]} == set(repository_with_commits.last_commit.parents)
     assert {random_commit_list[0], random_commit_list2[0]} == set(initial_commit.children)
