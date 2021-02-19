@@ -3,11 +3,12 @@ import datetime
 
 class Commit:
     def __init__(self, hash: str, message: str, date_time: datetime.datetime,
-                 author: str, repository: 'Repository'):
+            author: str, email: str, repository: 'Repository'):
         self._hash = hash
         self.message = message
         self.datetime = date_time
         self.author = author
+        self.email = email
         self._repository = repository
 
     @property

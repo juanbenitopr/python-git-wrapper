@@ -161,9 +161,9 @@ class Repository:
     def get_commit(self, hash: str) -> Commit:
 
         last_log = self.execute(
-            f'show {hash} --pretty=format:"%H{DELIMITER}%an{DELIMITER}%ad{DELIMITER}%s" --date=iso -s'
+            f'show {hash} --pretty=format:"%H{DELIMITER}%an{DELIMITER}%ad{DELIMITER}%ae{DELIMITER}%s" --date=iso -s'
         ).replace('"', '')
-        chash, cauthor, cdate_time, cmessage = last_log.split(DELIMITER)
+        chash, cauthor, cdate_time, cemail, cmessage = last_log.split(DELIMITER)
 
         cdate_time = datetime.datetime.strptime(cdate_time,
                                                 '%Y-%m-%d %H:%M:%S %z')
@@ -171,6 +171,7 @@ class Repository:
             hash=chash,
             author=cauthor,
             date_time=cdate_time,
+            email=cemail,
             message=cmessage,
             repository=self)
 
