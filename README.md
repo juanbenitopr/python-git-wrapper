@@ -1,6 +1,8 @@
 # Git Wrapper
 
 The Simple Python Git Wrapper
+---
+[![PyPI version](https://badge.fury.io/py/python-git-wrapper.svg)](https://pypi.org/project/python-git-wrapper/)
 
 This library is a simple git wrapper which let you perform many operations on any git repository in a powerful and simple way.
 

@@ -18,7 +18,7 @@ class Commit:
     @hash.setter
     def hash(self, value):
         raise Exception(
-            'There is no possible set a new hash value, instance a new commit instead'
+            'It is not possible to set a new hash value, instance a new commit instead'
         )
 
     @property

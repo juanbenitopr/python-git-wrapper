@@ -1,6 +1,6 @@
 import os
 import re
-from typing import List, Tuple
+from typing import List
 
 import datetime
 
@@ -9,15 +9,7 @@ from python_git_wrapper.commit import Commit
 from python_git_wrapper.exceptions import RepositoryNotFoundError, RepositoryEmpty
 from python_git_wrapper.git_service import GitService
 from python_git_wrapper.status import Status
-
-DELIMITER = '¡|&'
-
-
-def join_flags(flags: List[Tuple[bool, str]]):
-    return "".join([flag for (flagged, flag) in flags if flagged])
-
-
-get_hash = lambda commits: set(commit.hash for commit in commits)
+from python_git_wrapper.utils import DELIMITER, get_hash, join_flags
 
 
 class Repository:
