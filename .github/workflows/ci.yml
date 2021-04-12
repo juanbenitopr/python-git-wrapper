@@ -28,6 +28,11 @@ jobs:
         pip install flake8 pytest
         python -m pip install .
 
+    - name: Set up git
+      run: |
+        git config --global user.name "runner"
+        git config --global user.email "runner@github"
+
     - name: Lint
       run: |
         # Peform basic lints
