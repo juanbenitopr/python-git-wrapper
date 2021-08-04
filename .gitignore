@@ -6,3 +6,5 @@ __pycache__
 .pypirc
 .package.lock
 .tox/
+*.egg-info
+*.pyc

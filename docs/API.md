@@ -56,7 +56,7 @@ Push the changes to your remote repository.
 
 **remote_branch**: str
     Remote branch destination of the changes. **Optional** Default to upstream branch
-    
+
 **local_branch**: str
     Local branch source of your changes. If you don't specify it will use your current branch. **Optional** Default Current Branch
 
@@ -106,9 +106,9 @@ Create a new branch
 **Returns** -> Status
 
 ---
-`def merge_branches((self, branch_origin: Branch, branch: Branch, squash=False, new_commit=False) -> Branch`
+`def merge_branches((self, branch_origin: Branch, branch: Branch, squash=False, fast_forward=True, new_commit=False) -> Branch`
 
-Merge one branch into another one. **TAKE CARE** This library doesn't support confflict resolution. the status structure would provide troubles in that situation, if your project is prune to conflicts don't use it.
+Merge one branch into another one. **TAKE CARE** This library doesn't support conflict resolution. the status structure would provide troubles in that situation, if your project is prune to conflicts don't use it.
 
 **branch_origin**: str
     Base branch to the merge. **Mandatory**
@@ -118,6 +118,9 @@ Merge one branch into another one. **TAKE CARE** This library doesn't support co
 
 **squash**: boolean
     Flag to indicate you want to merge using squash mode. **Optional** Default to False
+
+**fast_forward**: boolean
+    Flag to indicate you want to merge using fast-forward only. **Optional** Default to True
 
 **new_commit**: boolean
     Flag to indicate you want to create a new commit with the merge. **Optional** Default to False
@@ -168,6 +171,16 @@ Rewrite the previous commit with the new message specified.
 **Returns** -> Commit
 
 ---
+`* def get_commit(self, hash: str) -> Commit`
+
+Retrieve a commit by its hash in the repository.
+
+**hash**: str
+    Hash of the commit you want to retrieve. **Mandatory**
+
+**Returns** -> Commit
+
+---
 `* def get_commit_by_position(self, position: int) -> Commit`
 
 Retrieve a commit by its position in the branch.
@@ -176,6 +189,26 @@ Retrieve a commit by its position in the branch.
     Position of the commit you want to retrieve. **Mandatory**
 
 **Returns** -> Commit
+
+---
+`* def get_commit_children(self, commit: Commit) -> List[Commit]`
+
+Returns the commits that immediately build of the given commit.
+
+**commit**: commit
+    The commit to query. **Mandatory**
+
+**Returns** -> List[Commit]
+
+---
+`* def get_commit_parents(self, commit: Commit) -> List[Commit]`
+
+Returns the commits that immediately contributed to the given commit.
+
+**commit**: commit
+    The commit to query. **Mandatory**
+
+**Returns** -> List[Commit]
 
 ---
 `* def get_branches_by_commit(self, commit: Commit) -> List[Branch]`

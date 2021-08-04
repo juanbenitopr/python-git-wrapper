@@ -7,7 +7,7 @@ from python_git_wrapper.git_service import GitService
 
 
 def test_create_git_service():
-    service = GitService.singleton('/usr/local/bin/git')
+    service = GitService.singleton()
     assert isinstance(service, GitService)
 
     service = GitService.instance()
@@ -20,7 +20,7 @@ def test_create_git_service_using_wrong_path():
 
 
 def test_run_git_command():
-    GitService.singleton('/usr/local/bin/git')
+    GitService.singleton()
 
     response = GitService.run_git_command('--version')
 
@@ -31,7 +31,7 @@ def test_run_git_command():
 
 
 def test_run_git_command_using_wrong_command():
-    GitService.singleton('/usr/local/bin/git')
+    GitService.singleton()
 
     with pytest.raises(GitError):
         GitService.run_git_command('--v')

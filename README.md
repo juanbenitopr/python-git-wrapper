@@ -1,6 +1,8 @@
 # Git Wrapper
 
 The Simple Python Git Wrapper
+---
+[![PyPI version](https://badge.fury.io/py/python-git-wrapper.svg)](https://pypi.org/project/python-git-wrapper/)
 
 This library is a simple git wrapper which let you perform many operations on any git repository in a powerful and simple way.
 
@@ -78,7 +80,10 @@ Small overview about the capabilities of this library. All this methods and attr
 | execute  | execute any git command in the repository | str |
 | revert_last_commit  | Generate a new commit reverting the previous one  | Commit |
 | change_last_commit_message  | Rewrite the previous commit message  | Commit |
+| get_commit  | Retrieve Commit by hash in the repository  |  Commit |
 | get_commit_by_position  | Retrieve Commit by position in the current branch  |  Commit |
+| get_commit_children  | Retrieve Commits that HEAD contributed towards  |  Commit |
+| get_commit_parents  | Retrieve Commits that contributed towards HEAD  |  Commit |
 | get_branches_by_commit  | Retrieve all the branches which contain one specific commit | Commit  |
 
 
